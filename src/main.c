@@ -1,17 +1,31 @@
 #include "include/main.h"
+#include <stdlib.h>
 
 int main(int argc, char *argv[])
 {
-	for (int i = 0; i < argc; i++)
+	if (argc == 1)
 	{
-		printf("Arg %i: %s\n", i + 1,  argv[i]);
+		printf("Opening empty\n");
+		return rose_init(NULL);
 	}
 
-	if (argc > 1)
+	enum rose_run_mode mode;
+	mode = mode_editor;
+
+	enum rose_flag_id flag_id = get_flag(argv[1]);
+
+	if (flag_id == id_null)
 	{
 		printf("Opening %s\n", argv[1]);
 		return rose_init(argv[1]);
 	}
+	else
+	{
 
-	return rose_init(NULL);
+	}
+}
+
+enum rose_flag_id get_flag(char *input)
+{
+	return id_null;
 }

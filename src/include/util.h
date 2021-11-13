@@ -1,6 +1,9 @@
 #ifndef ROSE_UTIL_H
 #define ROSE_UTIL_H
 
+// macros
+#define ROSE_VERSION "0.0.1"
+
 // Standard libraries
 #include <stdio.h>
 #include <stdlib.h>
