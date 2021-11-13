@@ -4,7 +4,6 @@
 #include "util.h"
 
 typedef struct {
-	int process_type;
 	FILE *handle;
 } rose_process;
 

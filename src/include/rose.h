@@ -3,6 +3,6 @@
 
 #include "util.h"
 
-int rose_init(char *input);
+int rose_init(char *inputs[ROSE_MAX_BUFFERS]);
 
 #endif

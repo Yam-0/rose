@@ -6,7 +6,6 @@
 
 typedef struct {
 	rose_process *process;
-
 	int running;
 	int focused;
 } rose_state;
