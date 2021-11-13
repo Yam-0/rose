@@ -3,7 +3,9 @@
 
 #include "util.h"
 #include "buffer.h"
+#include "window.h"
+#include "state.h"
 
-int rose_init(char *inputs[ROSE_MAX_BUFFERS]);
+int rose_init(char *inputs[ROSE_MAX_BUFFERS], int input_count);
 
 #endif

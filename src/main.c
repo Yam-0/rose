@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 	if (argc == 1)
 	{
 		printf("Opening empty\n");
-		return rose_init(inputs);
+		return rose_init(inputs, 0);
 	}
 
 	int input_count = 0;
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 	switch (mode)
 	{
 		case mode_editor:
-			return rose_init(inputs);
+			return rose_init(inputs, input_count);
 			break;
 
 		case mode_help:
