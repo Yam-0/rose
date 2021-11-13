@@ -3,6 +3,6 @@
 
 #include "util.h"
 
-int rose_init();
+int rose_init(char *input);
 
 #endif

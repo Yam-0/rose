@@ -6,6 +6,6 @@ typedef struct {
 	int focused;
 } rose_state;
 
-rose_state state;
+extern rose_state state;
 
 #endif

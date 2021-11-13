@@ -3,6 +3,8 @@
 
 // Standard libraries
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // Rose core
 #include "structs.h"

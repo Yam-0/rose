@@ -1,6 +1,7 @@
-#ifndef ROSE_WINDOW_H
-#define ROSE_WINDOW_H
+#ifndef ROSE_PROCESS_H
+#define ROSE_PROCESS_H
 
+#include "state.h"
 #include "util.h"
 
 typedef struct {
@@ -9,6 +10,6 @@ typedef struct {
 
 typedef struct {
 
-} rose_window;
+} rose_process;
 
 #endif
