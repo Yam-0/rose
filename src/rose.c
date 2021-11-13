@@ -1,7 +1,15 @@
 #include "include/rose.h"
+#include "include/state.h"
 
-int main()
+int rose_init()
 {
-	printf("Hello World\n");
+	printf(" --- ROSE --- \n");
+	state.running = 1;
+
+	while (state.running)
+	{
+		printf("Running\n");
+	}
+
 	return 0;
 }

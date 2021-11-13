@@ -1,2 +1,5 @@
 build/
+
+debug.*
 build.*
+run.*

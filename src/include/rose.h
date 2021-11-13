@@ -1,6 +1,8 @@
 #ifndef ROSE_H
 #define ROSE_H
 
-#include <stdio.h>
+#include "util.h"
+
+int rose_init();
 
 #endif
