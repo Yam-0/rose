@@ -32,14 +32,13 @@ int rose_window_draw()
 {
 	state.process->window_size = rose_getsize();
 
-	rose_buffers buffers = state.process->buffers;
-	rose_buffer *buffer = buffers.first;
+	rose_panel *panel = state.process->panels_first;
 
 	// Draw buffers
-	while (buffer != NULL)
+	while (panel != NULL)
 	{
-		rose_buffer_draw(buffer);
-		buffer = buffer->next;
+		rose_panel_draw(panel);
+		panel = panel->next;
 	}
 
 	return 0;

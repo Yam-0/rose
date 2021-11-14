@@ -8,7 +8,7 @@ int rose_init(char *inputs[ROSE_MAX_BUFFERS], int input_count)
 
 	if (input_count == 0)
 	{
-		printf("No input, opening new buffer\n");
+		rose_load("");
 	}
 	else {
 		for (int i = 0; i < input_count; i++) {
@@ -37,12 +37,42 @@ int rose_init(char *inputs[ROSE_MAX_BUFFERS], int input_count)
 
 int rose_load(char *str)
 {
+	// Return if buffer already loeaded
+	rose_buffer *exists = rose_find_buffer_str(str);
+	if (exists)
+	{
+		state.process->active_panel->buffer_active = exists;
+		return 0;
+	}
+
+	// Allocate buffer
 	rose_buffer *buffer = malloc(sizeof(rose_buffer));
+	rose_panel *panel = state.process->active_panel;
+	panel->buffer_active = buffer;
 
+	// Generate new id
+	int id = 0;
+	while (rose_find_buffer_id(id) != NULL)
+		id++;
+	buffer->id = id;
+
+	// Buffer start info
+	buffer->mode = mode_normal;
+	buffer->buffer_type = rose_buffer_editor;
+	buffer->cursors[0].active = 1;
+
+	if (state.process->buffer_first == NULL)
+	{
+		state.process->buffer_first = buffer;
+	}
+	else
+	{
+		state.process->buffer_last->next = buffer;
+		state.process->buffer_last = buffer;
+	}
+
+	// Open file
 	FILE *handle;
-	char c;
-    char *line = NULL;
-
     handle = fopen(str, "r");
     if (handle == NULL)
 	{
@@ -51,8 +81,24 @@ int rose_load(char *str)
 		return 1;
 	}
 
+	// Get file name and location
+	int file_descriptor = fileno(handle);
+	char *filename = malloc(255);
+	char *path = malloc(255);
+
+	sprintf(path, "/proc/self/fd/%d", file_descriptor);
+	int n = readlink(path, filename, 255);
+	if (n < 0)
+		return 1;
+
+	buffer->file_path = path;
+	buffer->file_name = filename;
+
+	// Read chars
+	char c;
 	while (ROSE_TRUE)
 	{
+		char *line = NULL;
 		c = getc(handle);
 		if (c == EOF)
 			break;
@@ -61,10 +107,6 @@ int rose_load(char *str)
 	}
 
     fclose(handle);
-
-	state.process->buffers.first = buffer;
-
-	printf("\n");
 	return 0;
 }
 
@@ -86,4 +128,32 @@ int rose_exit()
 	rose_state_destroy();
 
 	exit(EXIT_SUCCESS);
+}
+
+rose_buffer *rose_find_buffer_id(int id)
+{
+	rose_buffer *buffer = state.process->buffer_first;
+	while (buffer->next != NULL)
+	{
+		if (id == buffer->id)
+			return buffer;
+
+		buffer = buffer->next;
+	}
+
+	return NULL;
+}
+
+rose_buffer *rose_find_buffer_str(char *str)
+{
+	rose_buffer *buffer = state.process->buffer_first;
+	while (buffer->next != NULL)
+	{
+		if (strcmp(str, buffer->name) == 0)
+			return buffer;
+
+		buffer = buffer->next;
+	}
+
+	return NULL;
 }
