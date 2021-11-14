@@ -30,12 +30,17 @@ int rose_window_init()
 
 int rose_window_draw()
 {
-	rose_point p1 = {0, 0};
-	rose_point p2 = {0, 1};
-	rose_window_print(p1, COLOR_WHITE, COLOR_BLACK, "ROSE TEXT EDITOR");
-	rose_window_print(p2, COLOR_GREEN, COLOR_BLACK, "ROSE TEXT EDITOR");
+	state.process->window_size = rose_getsize();
 
-	rose_window_draw_cursor();
+	rose_buffers buffers = state.process->buffers;
+	rose_buffer *buffer = buffers.first;
+
+	// Draw buffers
+	while (buffer != NULL)
+	{
+		rose_buffer_draw(buffer);
+		buffer = buffer->next;
+	}
 
 	return 0;
 }
@@ -55,25 +60,6 @@ int rose_window_put(rose_point p, int foreground, int background, char c)
 
 	attrset(COLOR_PAIR(pair));
 	mvaddch(p.y, p.x, c);
-	return 0;
-}
-
-int rose_window_draw_cursor()
-{
-	rose_point cursor_pos = state.process->cursor.pos;
-	unsigned int cell = mvinch(cursor_pos.y, cursor_pos.x);
-    const int color = cell & A_COLOR;
-
-	int foreground;
-    for (int i = 1; i <= 64; i++) {
-		if (color == COLOR_PAIR(i))
-		{
-			foreground = i % 8;
-		}
-    }
-
-	attrset(COLOR_PAIR(foreground * 8));
-	mvaddch(cursor_pos.y, cursor_pos.x, cell & A_CHARTEXT);
 	return 0;
 }
 

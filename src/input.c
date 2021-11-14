@@ -10,13 +10,9 @@ int rose_input_update()
 		state.updated = ROSE_TRUE;
 
 	if (input == 'l')
-		state.process->cursor.pos.x++;
-	if (input == 'k')
-		state.process->cursor.pos.y--;
-	if (input == 'j')
-		state.process->cursor.pos.y++;
+		state.process->buffers.active_buffer->cursors[0].pos.x++;
 	if (input == 'h')
-		state.process->cursor.pos.x--;
+		state.process->buffers.active_buffer->cursors[0].pos.x--;
 
 	return 0;
 }

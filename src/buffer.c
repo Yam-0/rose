@@ -1,37 +1,26 @@
 #include "include/buffer.h"
 
-int rose_buffer_load(char *str)
+
+int rose_buffer_draw(rose_buffer *buffer)
 {
-	printf("Opening: %s\n\n", str);
 
-	FILE *handle;
-	char c;
-    char *line = NULL;
-
-    handle = fopen(str, "r");
-    if (handle == NULL)
-	{
-		printf("Oopsie woopsie\n");
-		printf("File not found uwu\n");
-		return 1;
-	}
-
-	while (ROSE_TRUE)
-	{
-		c = getc(handle);
-		if (c == EOF)
-			break;
-
-		putchar(c);
-	}
-
-    fclose(handle);
-
-	printf("\n");
 	return 0;
 }
 
-int rose_buffer_save(char *str)
+int rose_buffer_draw_cursor(rose_buffer *buffer, rose_cursor cursor)
 {
+	unsigned int cell = mvinch(cursor.pos.y, cursor.pos.x);
+    const int color = cell & A_COLOR;
+
+	int foreground;
+    for (int i = 1; i <= 64; i++) {
+		if (color == COLOR_PAIR(i))
+		{
+			foreground = i % 8;
+		}
+    }
+
+	attrset(COLOR_PAIR(foreground * 8));
+	mvaddch(cursor.pos.y, cursor.pos.x, cell & A_CHARTEXT);
 	return 0;
 }
