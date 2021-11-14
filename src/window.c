@@ -46,7 +46,6 @@ int rose_window_print(rose_point p, int foreground, int background, char *str)
 
 	attrset(COLOR_PAIR(pair));
 	mvaddstr(p.y, p.x, str);
-	attroff(pair);
 	return 0;
 }
 
@@ -56,19 +55,25 @@ int rose_window_put(rose_point p, int foreground, int background, char c)
 
 	attrset(COLOR_PAIR(pair));
 	mvaddch(p.y, p.x, c);
-	attroff(pair);
 	return 0;
 }
 
 int rose_window_draw_cursor()
 {
 	rose_point cursor_pos = state.process->cursor.pos;
-	int pair = mvinch(cursor_pos.y, cursor_pos.x) & A_COLOR;
-	/* int pair = foreground * 8 + background; */
+	unsigned int cell = mvinch(cursor_pos.y, cursor_pos.x);
+    const int color = cell & A_COLOR;
 
-	attrset(COLOR_PAIR(pair));
-	mvaddch(cursor_pos.y, cursor_pos.x, 'X');
-	attroff(pair);
+	int foreground;
+    for (int i = 1; i <= 64; i++) {
+		if (color == COLOR_PAIR(i))
+		{
+			foreground = i % 8;
+		}
+    }
+
+	attrset(COLOR_PAIR(foreground * 8));
+	mvaddch(cursor_pos.y, cursor_pos.x, cell & A_CHARTEXT);
 	return 0;
 }
 
