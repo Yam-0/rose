@@ -18,39 +18,15 @@ int rose_init(char *inputs[ROSE_MAX_BUFFERS], int input_count)
 
 	rose_window_init();
 
-	WINDOW *w = initscr();
-	curs_set(0);
-
-	if (has_colors())
-		start_color();
-
-	init_pair(1, COLOR_GREEN, COLOR_BLACK);
-	init_pair(2, COLOR_GREEN, COLOR_GREEN);
-
-	attrset(COLOR_PAIR(2));
-
-	cbreak();
-	noecho();
-	nodelay(w, TRUE);
-
 	while (state.running)
 	{
-		char input = getch();
+		if (state.updated)
+			erase();
 
-		/* if (input != ERR) */
-		/* 	erase(); */
+		rose_input_update();
 
-		if (input == 'l')
-			state.process->cursor.pos.x++;
-		if (input == 'k')
-			state.process->cursor.pos.y--;
-		if (input == 'j')
-			state.process->cursor.pos.y++;
-		if (input == 'h')
-			state.process->cursor.pos.x--;
+		rose_window_draw();
 
-		rose_point pos = state.process->cursor.pos;
-		mvaddch(pos.y, pos.x, 'X');
 		refresh();
 	}
 
