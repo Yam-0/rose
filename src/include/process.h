@@ -8,11 +8,12 @@ enum rose_mode { mode_normal, mode_insert, mode_command, mode_select };
 
 typedef struct {
 	int visible;
-	int px;
-	int py;
+	rose_point pos;
 } rose_cursor;
 
 typedef struct {
+	WINDOW *window;
+
 	enum rose_mode mode;
 	rose_cursor cursor;
 	rose_buffers buffers;

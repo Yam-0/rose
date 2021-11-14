@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <ncurses.h>
+
 // Rose core
 #include "structs.h"
 

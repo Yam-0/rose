@@ -5,6 +5,8 @@ int rose_state_init()
 	rose_process *process = malloc(sizeof(rose_process));
 	state.process = process;
 
+	state.running = 1;
+
 	return 0;
 }
 
