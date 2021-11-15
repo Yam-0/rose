@@ -20,9 +20,6 @@ int rose_init(char *inputs[ROSE_MAX_BUFFERS], int input_count)
 
 	while (state.running)
 	{
-		if (state.updated)
-			erase();
-
 		rose_input_update();
 
 		rose_window_draw();

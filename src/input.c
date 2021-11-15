@@ -2,12 +2,10 @@
 
 int rose_input_update()
 {
-	state.updated = ROSE_FALSE;
-
 	char input = getch();
 
 	if (input != ERR)
-		state.updated = ROSE_TRUE;
+		rose_window_draw_background();
 
 	/* if (input == 'l') */
 	/* 	state.process->buffers.active_buffer->cursors[0].pos.x++; */

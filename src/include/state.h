@@ -9,7 +9,6 @@ typedef struct {
 
 	int running;
 	int focused;
-	int updated;
 } rose_state;
 
 extern rose_state state;

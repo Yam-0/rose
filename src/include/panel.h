@@ -12,9 +12,6 @@ typedef struct rose_panel_item {
 	int update;
 } rose_panel;
 
-int rose_panel_init();
 int rose_panel_destroy();
-int rose_panel_draw(rose_panel *panel);
-int rose_panel_draw_cursors(rose_panel *panel);
 
 #endif
