@@ -122,6 +122,7 @@ int rose_exit()
 {
 	endwin();
 
+	printf("Bruh\n");
 	// Free everything
 	rose_state_destroy();
 

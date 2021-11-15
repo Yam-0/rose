@@ -18,6 +18,7 @@ int rose_window_init()
 
 int rose_window_draw()
 {
+	// If size change
 	rose_point size = rose_getsize();
 	if (size.x != state.process->window_size.x || size.y != state.process->window_size.y)
 	{
@@ -96,6 +97,13 @@ rose_point rose_getsize()
 	point.y = w.ws_row;
 
 	return point;
+}
+
+int rose_panel_split(int vertical)
+{
+	rose_point p = { 0, 0 };
+	rose_window_print(p, ROSE_COLOR_BLUE, ROSE_COLOR_DARK_0, "SPLIT\n");
+	return 0;
 }
 
 int rose_panel_draw(rose_panel *panel)
