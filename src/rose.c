@@ -37,6 +37,11 @@ int rose_init(char *inputs[ROSE_MAX_BUFFERS], int input_count)
 
 int rose_load(char *str)
 {
+	// Not implemented
+	return 0;
+	/*
+
+
 	// Return if buffer already loeaded
 	rose_buffer *exists = rose_find_buffer_str(str);
 	if (exists)
@@ -86,11 +91,6 @@ int rose_load(char *str)
 	char *filename = malloc(255);
 	char *path = malloc(255);
 
-	sprintf(path, "/proc/self/fd/%d", file_descriptor);
-	int n = readlink(path, filename, 255);
-	if (n < 0)
-		return 1;
-
 	buffer->file_path = path;
 	buffer->file_name = filename;
 
@@ -108,6 +108,7 @@ int rose_load(char *str)
 
     fclose(handle);
 	return 0;
+	*/
 }
 
 int rose_save(rose_buffer *buffer)
@@ -149,7 +150,7 @@ rose_buffer *rose_find_buffer_str(char *str)
 	rose_buffer *buffer = state.process->buffer_first;
 	while (buffer->next != NULL)
 	{
-		if (strcmp(str, buffer->name) == 0)
+		if (strcmp(str, buffer->file_name) == 0)
 			return buffer;
 
 		buffer = buffer->next;

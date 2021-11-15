@@ -10,8 +10,9 @@ int rose_panel_destroy()
 	return 0;
 }
 
-int rose_panel_draw()
+int rose_panel_draw(rose_panel *panel)
 {
+	// Draw panel windows
 	return 0;
 }
 

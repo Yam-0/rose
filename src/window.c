@@ -30,17 +30,28 @@ int rose_window_init()
 
 int rose_window_draw()
 {
-	state.process->window_size = rose_getsize();
+	if (state.updated)
+		rose_window_draw_background();
 
+	// Draw panels
 	rose_panel *panel = state.process->panels_first;
-
-	// Draw buffers
 	while (panel != NULL)
 	{
-		rose_panel_draw(panel);
+		if (panel->update)
+		{
+			rose_panel_draw(panel);
+			panel->update = 0;
+		}
+
 		panel = panel->next;
 	}
 
+	return 0;
+}
+
+int rose_window_draw_background()
+{
+	state.process->window_size = rose_getsize();
 	return 0;
 }
 

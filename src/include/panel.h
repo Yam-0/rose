@@ -6,10 +6,10 @@
 
 typedef struct rose_panel_item {
 	rose_buffer *buffer_active;
-	rose_point size;
+	rose_point size_offset;
 
 	struct rose_panel_item *next;
-	int updated = 1;
+	int update;
 } rose_panel;
 
 int rose_panel_init();
