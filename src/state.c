@@ -11,10 +11,8 @@ int rose_state_init()
 	state.process = process;
 
 	// Init Panels
-	rose_panel *panel = malloc(sizeof(rose_panel));
-	state.process->panels_first = panel;
-	state.process->active_panel = panel;
-	panel->update = 1;
+	rose_panel_node *master = malloc(sizeof(rose_panel_node));
+	state.process->master_node = master;
 
 	return 0;
 }

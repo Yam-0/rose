@@ -16,29 +16,32 @@ int rose_window_init()
 	return 0;
 }
 
+int rose_node_draw(rose_panel_node *node)
+{
+
+
+	return 0;
+}
+
 int rose_window_draw()
 {
 	// If size change
-	rose_point size = rose_getsize();
-	if (size.x != state.process->window_size.x || size.y != state.process->window_size.y)
+	rose_point window_size = rose_getsize();
+	if (window_size.x != state.process->window_size.x || window_size.y != state.process->window_size.y)
 	{
-		state.process->window_size.x = size.x;
-		state.process->window_size.y = size.y;
+		state.process->window_size.x = window_size.x;
+		state.process->window_size.y = window_size.y;
 		rose_window_draw_background();
 	}
 
 	// Draw panels
-	rose_panel *panel = state.process->panels_first;
-	while (panel != NULL)
-	{
-		if (panel->update)
-		{
-			rose_panel_draw(panel);
-			panel->update = 0;
-		}
+	rose_panel_node *master = state.process->master_node;
+	rose_node_draw(master);
 
-		panel = panel->next;
-	}
+	// TEMP
+	rose_point pos = { 1, 1 };
+	rose_point size = { window_size.x - 2, window_size.y - 2 };
+	rose_panel_draw(NULL, pos, size);
 
 	return 0;
 }
@@ -55,9 +58,6 @@ int rose_window_draw_background()
 			rose_window_put(p, ROSE_COLOR_DARK_1, ROSE_COLOR_DARK_0, ' ');
 		}
 	}
-
-	// TEMP
-	rose_panel_draw(NULL);
 
 	return 0;
 }
@@ -103,32 +103,31 @@ int rose_panel_split(int vertical)
 {
 	rose_point p = { 0, 0 };
 	rose_window_print(p, ROSE_COLOR_BLUE, ROSE_COLOR_DARK_0, "SPLIT\n");
+
+	rose_panel_node *master = state.process->master_node;
+
 	return 0;
 }
 
-int rose_panel_draw(rose_panel *panel)
+int rose_panel_draw(rose_panel_node *node, rose_point pos, rose_point size)
 {
-	// Draw panel windows
-	rose_point window_size = state.process->window_size;
-	rose_point panel_size = { window_size.x - 2, window_size.y - 2};
-
 	// Draw borders
-	for (int y = 0; y < panel_size.y; y++)
+	for (int y = 0; y < size.y; y++)
 	{
-		rose_window_putxy(1, y + 1, ROSE_COLOR_DARK_3, ROSE_COLOR_DARK_3, ' ');
-		rose_window_putxy(window_size.x - 2, y + 1, ROSE_COLOR_DARK_3, ROSE_COLOR_DARK_3, ' ');
+		rose_window_putxy(pos.x, pos.y + y, ROSE_COLOR_DARK_3, ROSE_COLOR_DARK_3, ' ');
+		rose_window_putxy(size.x, pos.y + y, ROSE_COLOR_DARK_3, ROSE_COLOR_DARK_3, ' ');
 	}
 
-	for (int x = 0; x < panel_size.x; x++)
+	for (int x = 0; x < size.x - 2; x++)
 	{
-		rose_window_putxy(x + 1, 1, ROSE_COLOR_DARK_3, ROSE_COLOR_DARK_3, ' ');
-		rose_window_putxy(x + 1, window_size.y - 2, ROSE_COLOR_DARK_3, ROSE_COLOR_DARK_3, ' ');
+		rose_window_putxy(pos.x + x + 1, pos.y, ROSE_COLOR_DARK_3, ROSE_COLOR_DARK_3, ' ');
+		rose_window_putxy(pos.x + x + 1, pos.y + size.y - 1, ROSE_COLOR_DARK_3, ROSE_COLOR_DARK_3, ' ');
 	}
 
 	return 0;
 }
 
-int rose_buffer_draw_cursors(rose_panel *panel)
+int rose_buffer_draw_cursors(rose_panel_node *node)
 {
 	/* unsigned int cell = mvinch(cursor.pos.y, cursor.pos.x); */
     /* const int color = cell & A_COLOR; */
