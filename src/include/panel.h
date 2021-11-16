@@ -7,19 +7,17 @@
 enum rose_node_type {
 	rose_node_panel,
 	rose_node_vertical,
-	rose_node_horizontal
+	rose_node_horizontal,
 };
 
 typedef struct rose_panel_node_item {
 	struct rose_panel_node_item *parent;
 	struct rose_panel_node_item *next_sibling;
 	struct rose_panel_node_item *first_child;
-
-	rose_point position;
-	rose_point size;
+	enum rose_node_type node_type;
+	int child_count;
 
 	rose_buffer *active_buffer;
-	enum rose_node_type node_type;
 } rose_panel_node;
 
 int rose_panel_destroy();

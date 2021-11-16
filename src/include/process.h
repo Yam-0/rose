@@ -13,6 +13,7 @@ typedef struct {
 	rose_buffer *buffer_last;
 
 	rose_panel_node *master_node;
+	rose_panel_node *active_node;
 } rose_process;
 
 #endif
