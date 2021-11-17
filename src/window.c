@@ -84,15 +84,16 @@ int rose_node_draw(rose_panel_node *node, rose_point position, rose_point size)
 	rose_point new_position = position;
 	rose_point new_size = size;
 
-	int total_offset = 0;
-	int size_offset = size.x;
+	new_size.x = size.x;
+	int offset = size.x;
+	int remaining_size = size.x;
 	int sibling_count = 1;
 
 	if (node->parent != NULL)
 	{
 		sibling_count = node->parent->child_count;
-		if (sibling_count != 0)
-			size_offset = size.x / sibling_count;
+		if (sibling_count > 1)
+			offset = size.x / sibling_count;
 	}
 
 	// Draw self and siblings then draw children
@@ -100,20 +101,20 @@ int rose_node_draw(rose_panel_node *node, rose_point position, rose_point size)
 	int sibling_index = 0;
 	while (step_node != NULL)
 	{
-		new_size.x = size_offset;
-		new_position.x = position.x + new_size.x * sibling_index;
+		new_size.x = offset;
 
-		int last = (step_node->next_sibling == NULL);
-
-		if (last)
-			new_size.x = size.x - total_offset - 1;
-
-		if (last)
-			new_size.x += 1;
+		// If last
+		if (step_node->next_sibling == NULL)
+		{
+			new_position.x = size.x - remaining_size + 1;
+			new_size.x = remaining_size;
+		}
 		else
-			new_size.x -= 2;
-
-		total_offset += new_size.x + 2;
+		{
+			new_position.x = position.x + new_size.x * sibling_index;
+			remaining_size -= new_size.x;
+			new_size.x--;
+		}
 
 		if (node->node_type == rose_node_panel)
 			rose_panel_draw(node, new_position, new_size);
@@ -158,6 +159,7 @@ int rose_panel_split(int vertical)
 
 int rose_panel_draw(rose_panel_node *node, rose_point pos, rose_point size)
 {
+	size.x--;
 	// Draw borders
 	for (int y = 0; y < size.y; y++)
 	{
