@@ -27,6 +27,7 @@ int rose_window_draw()
 		rose_window_draw_background();
 	}
 
+
 	// Draw panels
 	rose_panel_node *master = state.process->master_node;
 	rose_point start_position = { 1, 1 };
@@ -81,19 +82,45 @@ int rose_node_draw(rose_panel_node *node, rose_point position, rose_point size)
 	if (node == NULL)
 		return 0;
 
+	// Is parent split type vertical
+	int split_type_vertical = node->parent != NULL ? node->parent->node_type == rose_node_vertical ? 1 : 0 : 0;
+	int split_type_horizontal = node->parent != NULL ? node->parent->node_type == rose_node_horizontal ? 1 : 0 : 0;
+
 	rose_point new_position = position;
 	rose_point new_size = size;
 
-	new_size.x = size.x;
-	int offset = size.x;
-	int remaining_size = size.x;
+	int offset;
+	int remaining_size;
+
+	if (split_type_vertical)
+	{
+		new_size.x = size.x;
+		offset = size.x;
+		remaining_size = size.x;
+	}
+	if (split_type_horizontal)
+	{
+		new_size.y = size.y;
+		offset = size.y;
+		remaining_size = size.y;
+	}
+
 	int sibling_count = 1;
 
 	if (node->parent != NULL)
 	{
 		sibling_count = node->parent->child_count;
 		if (sibling_count > 1)
-			offset = size.x / sibling_count;
+		{
+			if (split_type_vertical)
+			{
+				offset = size.x / sibling_count;
+			}
+			if (split_type_horizontal)
+			{
+				offset = size.y / sibling_count;
+			}
+		}
 	}
 
 	// Draw self and siblings then draw children
@@ -101,19 +128,39 @@ int rose_node_draw(rose_panel_node *node, rose_point position, rose_point size)
 	int sibling_index = 0;
 	while (step_node != NULL)
 	{
-		new_size.x = offset;
+		if (split_type_vertical)
+			new_size.x = offset;
+		if (split_type_horizontal)
+			new_size.y = offset;
 
 		// If last
 		if (step_node->next_sibling == NULL)
 		{
-			new_position.x = size.x - remaining_size + 1;
-			new_size.x = remaining_size;
+			if (split_type_vertical)
+			{
+				new_position.x = size.x - remaining_size + 1;
+				new_size.x = remaining_size;
+			}
+			if (split_type_horizontal)
+			{
+				new_position.y = size.y - remaining_size + 1;
+				new_size.y = remaining_size;
+			}
 		}
 		else
 		{
-			new_position.x = position.x + new_size.x * sibling_index;
-			remaining_size -= new_size.x;
-			new_size.x--;
+			if (split_type_vertical)
+			{
+				new_position.x = position.x + new_size.x * sibling_index;
+				remaining_size -= new_size.x;
+				new_size.x--;
+			}
+			if (split_type_horizontal)
+			{
+				new_position.y = position.y + new_size.y * sibling_index;
+				remaining_size -= new_size.y;
+				new_size.y--;
+			}
 		}
 
 		if (node->node_type == rose_node_panel)
@@ -131,9 +178,6 @@ int rose_node_draw(rose_panel_node *node, rose_point position, rose_point size)
 
 int rose_panel_split(int vertical)
 {
-	rose_point p = { vertical, 0 };
-	rose_window_print(p, ROSE_COLOR_BLUE, ROSE_COLOR_DARK_0, "SPLIT\n");
-
 	rose_panel_node *node = state.process->active_node;
 
 	if (node->node_type == rose_node_panel)
@@ -142,9 +186,31 @@ int rose_panel_split(int vertical)
 		split_node->parent = node->parent;
 		split_node->node_type = rose_node_panel;
 
-		// Match type to first split type
-		if (node->child_count == 1)
-			node->parent->node_type = vertical ? rose_node_vertical : rose_node_horizontal;
+
+		if (node->parent->child_count > 1)
+		{
+			if ((vertical && node->parent->node_type == rose_node_horizontal) ||
+				(!vertical && node->parent->node_type == rose_node_vertical))
+			{
+				rose_point p = { 0, 0 };
+				rose_window_print(p, ROSE_COLOR_BLUE, ROSE_COLOR_DARK_3, "");
+				printw("New split. Children:%i\n", node->parent->child_count);
+				refresh();
+
+				rose_panel_node *split_node_sibling = malloc(sizeof(rose_panel_node));
+				node->node_type = vertical ? rose_node_vertical : rose_node_horizontal;
+				node->first_child = split_node;
+				split_node->next_sibling = split_node_sibling;
+
+				split_node->active_buffer = node->active_buffer;
+				node->active_buffer = NULL;
+				split_node->child_count = 2;
+
+				return 0;
+			}
+		}
+
+		node->parent->node_type = vertical ? rose_node_vertical : rose_node_horizontal;
 
 		node->parent->child_count++;
 		node->next_sibling = split_node;
@@ -160,6 +226,7 @@ int rose_panel_split(int vertical)
 int rose_panel_draw(rose_panel_node *node, rose_point pos, rose_point size)
 {
 	size.x--;
+
 	// Draw borders
 	for (int y = 0; y < size.y; y++)
 	{
