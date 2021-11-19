@@ -186,25 +186,25 @@ int rose_panel_split(int vertical)
 		split_node->parent = node->parent;
 		split_node->node_type = rose_node_panel;
 
-
 		if (node->parent->child_count > 1)
 		{
 			if ((vertical && node->parent->node_type == rose_node_horizontal) ||
 				(!vertical && node->parent->node_type == rose_node_vertical))
 			{
-				rose_point p = { 0, 0 };
-				rose_window_print(p, ROSE_COLOR_BLUE, ROSE_COLOR_DARK_3, "");
-				printw("New split. Children:%i\n", node->parent->child_count);
-				refresh();
+				move(0, 0);
+				printw("new deep split");
 
 				rose_panel_node *split_node_sibling = malloc(sizeof(rose_panel_node));
 				node->node_type = vertical ? rose_node_vertical : rose_node_horizontal;
 				node->first_child = split_node;
-				split_node->next_sibling = split_node_sibling;
+				node->first_child->next_sibling = split_node_sibling;
+				node->child_count = 2;
+				split_node->parent = node;
 
 				split_node->active_buffer = node->active_buffer;
 				node->active_buffer = NULL;
-				split_node->child_count = 2;
+
+				state.process->active_node = split_node;
 
 				return 0;
 			}
