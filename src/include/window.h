@@ -21,7 +21,9 @@ int rose_window_putxy(int x, int y, int foreground, int background, char c);
 int rose_node_draw(rose_panel_node *node, rose_point position, rose_point size);
 
 int rose_panel_split(int vertical);
-int rose_panel_focus(int vertical, int direction_forward);
+int rose_panel_close(rose_panel_node *node);
+int rose_panel_destroy(rose_panel_node *node);
+int rose_panel_focus(int vertical, int direction_forward, int depth);
 int rose_panel_draw(rose_panel_node *node, rose_point pos, rose_point size);
 int rose_panel_draw_cursors(rose_panel_node *node);
 

@@ -247,7 +247,38 @@ int rose_panel_split(int vertical)
 	return 0;
 }
 
-int rose_panel_focus(int vertical, int direction_forward)
+int rose_panel_close(rose_panel_node *node)
+{
+	rose_panel_node *active_node = node;
+
+	// Temp solution
+	if (active_node->prev_sibling == NULL)
+	{
+		if (active_node->next_sibling != NULL)
+		{
+			active_node->parent->first_child = active_node->next_sibling;
+			active_node->next_sibling->prev_sibling = NULL;
+			state.process->active_node = active_node->prev_sibling;
+		}
+		else
+		{
+			active_node->parent->first_child = NULL;
+		}
+	}
+	else
+	{
+
+	}
+
+	if (active_node->parent != NULL)
+		active_node->parent->child_count--;
+
+	rose_panel_destroy(node);
+
+	return 0;
+}
+
+int rose_panel_focus(int vertical, int direction_forward, int depth)
 {
 	rose_panel_node *active_node = state.process->active_node;
 	if (active_node->node_type != rose_node_panel)
@@ -255,6 +286,7 @@ int rose_panel_focus(int vertical, int direction_forward)
 
 	rose_panel_node *target = active_node;
 	int node_type;
+	int search_depth = depth;
 
 	while (1)
 	{
@@ -265,7 +297,11 @@ int rose_panel_focus(int vertical, int direction_forward)
 
 		node_type = target->parent->node_type == rose_node_vertical ? 1 : 0;
 		if (node_type == vertical)
-			break;
+		{
+			search_depth--;
+			if (search_depth <= 0)
+				break;
+		}
 
 		target = target->parent;
 	}
@@ -277,7 +313,10 @@ int rose_panel_focus(int vertical, int direction_forward)
 	else
 		target = target->prev_sibling;
 	if (target == NULL)
+	{
+		rose_panel_focus(vertical, direction_forward, depth + 1);
 		return 0;
+	}
 
 	// Target is next matching root parent
 
@@ -295,6 +334,13 @@ int rose_panel_focus(int vertical, int direction_forward)
 		target = target->first_child;
 	}
 
+	return 0;
+}
+
+int rose_panel_destroy(rose_panel_node *node)
+{
+	// Temp
+	free(node);
 	return 0;
 }
 

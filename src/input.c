@@ -42,10 +42,11 @@ int rose_input_update()
 	{
 		if (state.key_buffer == CTRL('t') && input == 'v') { rose_panel_split(1); }
 		if (state.key_buffer == CTRL('t') && input == 'h') { rose_panel_split(0); }
-		if (state.key_buffer == ' ' && input == 'h') { rose_panel_focus(1, 0); }
-		if (state.key_buffer == ' ' && input == 'l') { rose_panel_focus(1, 1); }
-		if (state.key_buffer == ' ' && input == 'k') { rose_panel_focus(0, 0); }
-		if (state.key_buffer == ' ' && input == 'j') { rose_panel_focus(0, 1); }
+		if (state.key_buffer == CTRL('t') && input == 'q') { rose_panel_close(state.process->active_node); }
+		if (state.key_buffer == ' ' && input == 'h') { rose_panel_focus(1, 0, 1); }
+		if (state.key_buffer == ' ' && input == 'l') { rose_panel_focus(1, 1, 1); }
+		if (state.key_buffer == ' ' && input == 'k') { rose_panel_focus(0, 0, 1); }
+		if (state.key_buffer == ' ' && input == 'j') { rose_panel_focus(0, 1, 1); }
 
 		state.key_buffer = '\0';
 	}
