@@ -4,11 +4,9 @@
 #include "structs.h"
 #include "process.h"
 
-enum rose_key_buffer { rose_key_none, rose_key_split };
-
 typedef struct {
 	rose_process *process;
-	enum rose_key_buffer key_buffer;
+	char key_buffer;
 
 	int running;
 	int focused;

@@ -1,4 +1,12 @@
 #include "include/input.h"
+#include "include/color.h"
+
+int rose_input_init()
+{
+	state.key_buffer = '\0';
+
+	return 0;
+}
 
 int rose_input_update()
 {
@@ -8,40 +16,38 @@ int rose_input_update()
 
 	rose_window_draw_background();
 
-	enum rose_key_buffer last_key = state.key_buffer;
-	state.key_buffer = rose_key_none;
-
-	switch (input)
+	if (state.key_buffer == '\0')
 	{
-		case 'v':
-			switch (last_key)
-			{
-				case rose_key_none:
-					// Visual mode
-					break;
+		switch (input)
+		{
+			// Movement
+			case 'h':
+				break;
+			case 'k':
+				break;
+			case 'l':
+				break;
+			case 'j':
+				break;
 
-				case rose_key_split: // Vertical split
-					rose_panel_split(1);
-					break;
-			}
-			break;
+			case CTRL('t'):
+				state.key_buffer = CTRL('t');
+				break;
+			case ' ':
+				state.key_buffer = ' ';
+				break;
+		}
+	}
+	else
+	{
+		if (state.key_buffer == CTRL('t') && input == 'v') { rose_panel_split(1); }
+		if (state.key_buffer == CTRL('t') && input == 'h') { rose_panel_split(0); }
+		if (state.key_buffer == ' ' && input == 'h') { rose_panel_focus(1, 0); }
+		if (state.key_buffer == ' ' && input == 'l') { rose_panel_focus(1, 1); }
+		if (state.key_buffer == ' ' && input == 'k') { rose_panel_focus(0, 0); }
+		if (state.key_buffer == ' ' && input == 'j') { rose_panel_focus(0, 1); }
 
-		case 'h':
-			switch (last_key)
-			{
-				case rose_key_none:
-					// Move left
-					break;
-
-				case rose_key_split: // Horizontal split
-					rose_panel_split(0);
-					break;
-			}
-			break;
-
-		case CTRL('t'):
-			state.key_buffer = rose_key_split;
-			break;
+		state.key_buffer = '\0';
 	}
 
 	return 0;

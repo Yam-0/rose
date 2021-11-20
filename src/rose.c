@@ -16,10 +16,8 @@ int rose_init(char *inputs[ROSE_MAX_BUFFERS], int input_count)
 		}
 	}
 
+	rose_input_init();
 	rose_window_init();
-
-	rose_panel_split(1);
-	rose_panel_split(0);
 
 	while (state.running)
 	{

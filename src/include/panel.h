@@ -12,6 +12,7 @@ enum rose_node_type {
 
 typedef struct rose_panel_node_item {
 	struct rose_panel_node_item *parent;
+	struct rose_panel_node_item *prev_sibling;
 	struct rose_panel_node_item *next_sibling;
 	struct rose_panel_node_item *first_child;
 	enum rose_node_type node_type;

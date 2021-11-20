@@ -5,6 +5,7 @@
 #include "state.h"
 #include "window.h"
 
+int rose_input_init();
 int rose_input_update();
 
 #endif
