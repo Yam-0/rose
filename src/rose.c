@@ -19,6 +19,8 @@ int rose_init(char *inputs[ROSE_MAX_BUFFERS], int input_count)
 	rose_input_init();
 	rose_window_init();
 
+	rose_panel_temp_layout();
+
 	while (state.running)
 	{
 		rose_input_update();

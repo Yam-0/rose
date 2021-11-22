@@ -114,11 +114,11 @@ int rose_node_draw(rose_panel_node *node, rose_point position, rose_point size)
 		{
 			if (split_type_vertical)
 			{
-				offset = size.x / sibling_count;
+				offset = size.x / sibling_count + node->relative_size.x;
 			}
 			if (split_type_horizontal)
 			{
-				offset = size.y / sibling_count;
+				offset = size.y / sibling_count + node->relative_size.y;
 			}
 		}
 	}
@@ -247,32 +247,33 @@ int rose_panel_split(int vertical)
 	return 0;
 }
 
+int rose_panel_resize(int vertical, int add_offset)
+{
+	/* rose_panel_node *node = state.process->active_node; */
+
+	/* if (vertical) */
+	/* { */
+	/* 	node->relative_size.x += add_offset; */
+	/* } */
+	/* else */
+	/* { */
+
+	/* } */
+
+	return 0;
+}
+
+int rose_panel_temp_layout()
+{
+	rose_panel_split(1);
+	rose_panel_split(0);
+	state.process->active_node = state.process->master_node->first_child;
+
+	return 0;
+}
+
 int rose_panel_close(rose_panel_node *node)
 {
-	rose_panel_node *active_node = node;
-
-	// Temp solution
-	if (active_node->prev_sibling == NULL)
-	{
-		if (active_node->next_sibling != NULL)
-		{
-			active_node->parent->first_child = active_node->next_sibling;
-			active_node->next_sibling->prev_sibling = NULL;
-			state.process->active_node = active_node->prev_sibling;
-		}
-		else
-		{
-			active_node->parent->first_child = NULL;
-		}
-	}
-	else
-	{
-
-	}
-
-	if (active_node->parent != NULL)
-		active_node->parent->child_count--;
-
 	rose_panel_destroy(node);
 
 	return 0;
